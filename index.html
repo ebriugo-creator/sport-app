@@ -113,6 +113,11 @@
   .ex-svg{width:100%;max-width:320px;margin:6px auto 0;}
   .ex-svg svg{width:100%;height:auto;display:block;}
   .work .ex-svg{color:var(--effort);} .rest .ex-svg{color:var(--rest);}
+  .ex-steps{max-width:330px;margin:12px auto 0;display:flex;flex-direction:column;gap:7px;text-align:left;}
+  .ex-steps .step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.35;}
+  .ex-steps .step em{font-style:normal;color:var(--text);}
+  .ex-steps .step span{flex-shrink:0;width:21px;height:21px;border-radius:50%;background:var(--surface2);
+    color:var(--rest);font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px;}
 
   .next-up{text-align:center;color:var(--faint);font-size:13px;margin-top:auto;padding-top:10px;}
   .next-up b{color:var(--muted);}
@@ -298,6 +303,7 @@
     <div class="ex-name" id="rnName">—</div>
     <div class="ex-cue" id="rnCue"></div>
     <div class="ex-svg" id="rnSvg"></div>
+    <div class="ex-steps" id="rnSteps"></div>
     <div class="next-up" id="rnNext"></div>
     <div class="rn-controls">
       <button class="ctrl" id="rnPause"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg><span>Pause</span></button>
@@ -340,16 +346,17 @@ const DIAG={
     `<path ${G} d="M96 33 L96 72"/><path ${G} d="M96 44 L74 34"/><path ${G} d="M96 44 L118 56"/>`+
     `<path ${G} d="M96 72 L90 112"/><path ${G} d="M96 72 L112 92 L94 96"/>`+
     `<path ${H} d="M120 92 Q110 100 96 96"/>`+ground),
-  mountainClimbers:wrap(head(158,66)+
-    `<path ${G} d="M150 68 L96 92"/>`+
-    `<path ${G} d="M136 74 L138 108"/><path ${G} d="M118 82 L120 108"/>`+
-    `<path ${G} d="M96 92 L58 108"/><path ${G} d="M96 92 L120 96 L106 108"/>`+
-    `<path ${H} d="M126 100 L112 100 M120 94 L110 100 L120 106"/>`+ground),
-  burpees:wrap(
-    `<path ${G} d="M60 108 L96 92"/>${head(112,86)}`+
-    `<path ${G} d="M78 98 L80 112"/><path ${G} d="M96 92 L120 104"/>`+
-    `<path ${G} d="M96 92 L124 96 L112 112"/>`+
-    `<path ${H} d="M96 60 L96 44 M90 50 L96 42 L102 50"/>`+ground),
+  mountainClimbers:wrap(head(150,80)+
+    `<path ${G} d="M146 84 L146 118"/>`+
+    `<path ${G} d="M146 84 L92 100"/>`+
+    `<path ${G} d="M92 100 L58 118"/>`+
+    `<path ${G} d="M92 100 L114 92 L120 112"/>`+
+    `<path ${H} d="M104 76 Q118 84 108 96"/>`+ground),
+  burpees:wrap(head(150,84)+
+    `<path ${G} d="M146 88 L150 118"/>`+
+    `<path ${G} d="M146 88 L88 104"/>`+
+    `<path ${G} d="M88 104 L52 118"/>`+
+    `<path ${H} d="M176 74 L176 46 M168 56 L176 44 L184 56"/>`+ground),
   crunch:wrap(
     `<path ${G} d="M60 108 L96 108"/>`+ // back on floor (hips)
     `<path ${G} d="M96 108 L120 88"/>${head(128,80)}`+ // torso curled up
@@ -371,18 +378,18 @@ const DIAG={
     `<path ${G} d="M96 90 L98 112"/>`+ // support arm down
     `<path ${G} d="M120 78 L124 52"/>`+ // top arm up
     ground),
-  bicycle:wrap(
-    `<path ${G} d="M56 108 L92 100"/>${head(48,100)}`+
-    `<path ${G} d="M92 100 L112 74"/>`+ // torso up
-    `<path ${G} d="M100 88 L120 82"/>`+ // elbow toward knee
-    `<path ${G} d="M92 100 L118 104 L104 92"/>`+ // one knee in
-    `<path ${G} d="M92 100 L128 108"/>`+ // other leg extended
-    ground),
-  russianTwist:wrap(
-    `<path ${G} d="M70 108 L96 78"/>${head(104,70)}`+ // seated lean back
-    `<path ${G} d="M96 88 L128 96"/>`+ // arms twisted to side
-    `<path ${G} d="M70 108 L104 112 L96 92"/>`+ // bent legs
-    `<path ${H} d="M132 84 Q142 96 132 108"/>`+ground),
+  bicycle:wrap(head(56,100)+
+    `<path ${G} d="M64 104 L98 100"/>`+
+    `<path ${G} d="M98 100 L106 112"/>`+
+    `<path ${G} d="M106 112 L96 92 L112 86"/>`+
+    `<path ${G} d="M106 112 L140 106"/>`+
+    `<path ${G} d="M72 102 L82 92"/>`+
+    `<path ${G} d="M72 102 L64 92"/>`+ground),
+  russianTwist:wrap(head(96,62)+
+    `<path ${G} d="M98 70 L84 108"/>`+
+    `<path ${G} d="M84 108 L110 100 L116 116"/>`+
+    `<path ${G} d="M96 82 L124 90"/>`+
+    `<path ${H} d="M132 80 Q142 92 132 104"/>`+ground),
   pushUp:wrap(head(150,72)+
     `<path ${G} d="M142 76 L62 100"/>`+
     `<path ${G} d="M124 84 L122 112"/><path ${G} d="M100 92 L98 112"/>`+ // arms straight down
@@ -434,47 +441,47 @@ const DIAG={
     `<path ${G} d="M98 68 L78 86 L86 110"/>`+
     `<path ${G} d="M98 68 L118 86 L110 110"/>`+
     `<path ${H} d="M100 22 L100 8 M94 14 L100 6 L106 14"/>`+ground),
-  skater:wrap(head(122,34)+
-    `<path ${G} d="M122 42 L104 74"/>`+
-    `<path ${G} d="M104 74 L96 110"/>`+
-    `<path ${G} d="M104 74 L132 96"/>`+
-    `<path ${G} d="M114 56 L86 64"/>`+
-    `<path ${G} d="M114 56 L136 48"/>`+
-    `<path ${H} d="M150 98 Q162 82 150 66"/>`+ground),
-  crossJacks:wrap(head(100,28)+
-    `<path ${G} d="M100 37 L100 70"/>`+
-    `<path ${G} d="M100 46 L118 62"/>`+
-    `<path ${G} d="M100 46 L82 62"/>`+
-    `<path ${G} d="M100 70 L114 110"/>`+
-    `<path ${G} d="M100 70 L86 110"/>`+
-    `<path ${H} d="M74 40 Q100 30 126 40"/>`+ground),
+  skater:wrap(head(118,40)+
+    `<path ${G} d="M118 48 L106 82"/>`+
+    `<path ${G} d="M106 82 L98 118"/>`+
+    `<path ${G} d="M106 82 L132 104"/>`+
+    `<path ${G} d="M112 60 L88 72"/>`+
+    `<path ${G} d="M112 60 L134 52"/>`+
+    `<path ${H} d="M150 100 Q162 84 150 68"/>`+ground),
+  crossJacks:wrap(head(100,34)+
+    `<path ${G} d="M100 42 L100 80"/>`+
+    `<path ${G} d="M100 52 L120 70"/>`+
+    `<path ${G} d="M100 52 L80 70"/>`+
+    `<path ${G} d="M100 80 L116 118"/>`+
+    `<path ${G} d="M100 80 L84 118"/>`+
+    `<path ${H} d="M78 40 Q100 30 122 40"/>`+ground),
   plankJacks:wrap(head(150,72)+
     `<path ${G} d="M142 76 L66 98"/>`+
     `<path ${G} d="M120 84 L118 108 L100 108"/>`+
     `<path ${G} d="M66 98 L50 112"/>`+
     `<path ${G} d="M66 98 L74 114"/>`+
     `<path ${H} d="M44 108 L36 116 M80 110 L88 118"/>`+ground),
-  reverseCrunch:wrap(head(46,102)+
-    `<path ${G} d="M54 108 L94 106"/>`+
-    `<path ${G} d="M58 106 L50 96"/>`+
-    `<path ${G} d="M94 106 L108 82 L90 88"/>`+
-    `<path ${H} d="M118 84 Q126 96 116 106"/>`+ground),
-  flutterKicks:wrap(head(46,104)+
-    `<path ${G} d="M54 110 L98 110"/>`+
+  reverseCrunch:wrap(head(48,104)+
+    `<path ${G} d="M56 110 L92 108"/>`+
+    `<path ${G} d="M92 108 L98 88 L82 90"/>`+
     `<path ${G} d="M60 108 L52 100"/>`+
-    `<path ${G} d="M98 110 L134 90"/>`+
-    `<path ${G} d="M98 110 L136 108"/>`+
-    `<path ${H} d="M142 84 L142 100 M150 100 L150 84"/>`+ground),
-  toeTouches:wrap(head(60,104)+
-    `<path ${G} d="M68 110 L94 106"/>`+
-    `<path ${G} d="M94 106 L110 64"/>`+
-    `<path ${G} d="M86 104 L108 78"/>`+
-    `<path ${H} d="M120 70 L112 62"/>`+ground),
-  hollowHold:wrap(head(84,76)+
-    `<path ${G} d="M92 80 L56 66"/>`+
-    `<path ${G} d="M92 80 L108 86"/>`+
-    `<path ${G} d="M108 86 L146 74"/>`+
-    `<path ${H} d="M60 96 Q100 108 140 96" stroke-dasharray="4 7"/>`+ground),
+    `<path ${H} d="M106 96 L106 78 M100 86 L106 76 L112 86"/>`+ground),
+  flutterKicks:wrap(head(48,108)+
+    `<path ${G} d="M56 114 L96 114"/>`+
+    `<path ${G} d="M96 114 L132 98"/>`+
+    `<path ${G} d="M96 114 L134 110"/>`+
+    `<path ${G} d="M60 112 L52 104"/>`+
+    `<path ${H} d="M138 90 L138 102 M146 104 L146 92"/>`+ground),
+  toeTouches:wrap(head(54,108)+
+    `<path ${G} d="M62 114 L88 110"/>`+
+    `<path ${G} d="M88 110 L100 66"/>`+
+    `<path ${G} d="M76 110 L98 82"/>`+
+    `<path ${H} d="M104 76 L96 66"/>`+ground),
+  hollowHold:wrap(head(70,84)+
+    `<path ${G} d="M78 88 L50 78"/>`+
+    `<path ${G} d="M78 88 Q100 102 120 94"/>`+
+    `<path ${G} d="M120 94 L150 82"/>`+
+    `<path ${H} d="M56 108 Q100 118 144 108" stroke-dasharray="4 7"/>`+ground),
   widePush:wrap(head(150,72)+
     `<path ${G} d="M142 76 L62 100"/>`+
     `<path ${G} d="M128 82 L138 112"/>`+
@@ -487,45 +494,45 @@ const DIAG={
     `<path ${G} d="M100 88 L128 76"/>`+
     `<path ${G} d="M64 98 L56 106"/>`+
     `<path ${H} d="M132 70 L138 62"/>`+ground),
-  inchworm:wrap(head(64,70)+
-    `<path ${G} d="M72 68 L112 96"/>`+
-    `<path ${G} d="M112 96 L120 112"/>`+
-    `<path ${G} d="M72 74 L50 100"/>`+
-    `<path ${H} d="M40 96 L54 96 M48 90 L58 96 L48 102"/>`+ground),
+  inchworm:wrap(head(66,68)+
+    `<path ${G} d="M74 72 L112 92"/>`+
+    `<path ${G} d="M112 92 L120 118"/>`+
+    `<path ${G} d="M74 74 L52 116"/>`+
+    `<path ${H} d="M40 104 L56 104 M50 98 L60 104 L50 110"/>`+ground),
 };
 
 /* ============ EXERCISE POOL ============ */
 const EX={
-  jumpingJacks:{n:"Jumping Jacks",cat:"cardio",cue:"Saute bras et jambes écartés"},
-  highKnees:{n:"Montées de genoux",cat:"cardio",cue:"Genoux hauts, rythme rapide"},
-  buttKicks:{n:"Talons-fesses",cat:"cardio",cue:"Ramène les talons vers les fesses"},
-  mountainClimbers:{n:"Mountain Climbers",cat:"cardio",cue:"Gainé, ramène les genoux vite"},
-  burpees:{n:"Burpees",cat:"cardio",cue:"Pompe puis saut vertical"},
-  crunch:{n:"Crunchs",cat:"core",cue:"Décolle les épaules, souffle en montant"},
-  legRaises:{n:"Relevé de jambes",cat:"core",cue:"Jambes tendues, bas du dos plaqué"},
-  plank:{n:"Planche",cat:"core",cue:"Corps aligné, abdos serrés"},
-  sidePlank:{n:"Gainage latéral",cat:"core",cue:"30s de chaque côté"},
-  bicycle:{n:"Bicyclette",cat:"core",cue:"Coude vers genou opposé"},
-  russianTwist:{n:"Russian Twists",cat:"core",cue:"Rotations lentes et contrôlées"},
-  pushUp:{n:"Pompes",cat:"upper",cue:"Coudes ~45°, corps gainé"},
-  inclinePush:{n:"Pompes inclinées",cat:"upper",cue:"Mains sur une surface surélevée"},
-  diamondPush:{n:"Pompes diamant",cat:"upper",cue:"Mains jointes, cible les triceps"},
-  dips:{n:"Dips sur chaise",cat:"upper",cue:"Descends les coudes à 90°"},
-  pikePush:{n:"Pompes piquées",cat:"upper",cue:"Bassin haut, cible les épaules"},
-  superman:{n:"Superman",cat:"upper",cue:"Décolle bras et jambes, gaine le dos"},
-  plankUpDown:{n:"Planche montée-descente",cat:"upper",cue:"Passe des avant-bras aux mains"},
-  armCircles:{n:"Cercles de bras",cat:"upper",cue:"Bras tendus, petits cercles"},
-  squatJumps:{n:"Squats sautés",cat:"cardio",cue:"Descends en squat puis saute"},
-  skater:{n:"Pas du patineur",cat:"cardio",cue:"Bonds latéraux, jambe croisée derrière"},
-  crossJacks:{n:"Cross Jacks",cat:"cardio",cue:"Croise bras et jambes en sautant"},
-  plankJacks:{n:"Planche sautée",cat:"cardio",cue:"En planche, écarte et resserre les pieds"},
-  reverseCrunch:{n:"Crunch inversé",cat:"core",cue:"Ramène les genoux, décolle le bassin"},
-  flutterKicks:{n:"Battements de jambes",cat:"core",cue:"Petits battements, bas du dos plaqué"},
-  toeTouches:{n:"Touche-orteils",cat:"core",cue:"Jambes tendues, mains vers les pieds"},
-  hollowHold:{n:"Position creuse",cat:"core",cue:"Bras et jambes décollés, dos plaqué"},
-  widePush:{n:"Pompes larges",cat:"upper",cue:"Mains larges, cible les pectoraux"},
-  shoulderTaps:{n:"Touches d'épaules",cat:"upper",cue:"Gainé, touche l'épaule opposée"},
-  inchworm:{n:"La chenille",cat:"upper",cue:"Marche les mains jusqu'en planche"},
+  jumpingJacks:{n:"Jumping Jacks",cat:"cardio",cue:"Saute bras et jambes écartés",s:["Debout, bras le long du corps","Saute en écartant jambes et bras au-dessus de la tête","Reviens en sautant, garde le rythme"]},
+  highKnees:{n:"Montées de genoux",cat:"cardio",cue:"Genoux hauts, rythme rapide",s:["Cours sur place","Monte les genoux à hauteur des hanches","Bras qui accompagnent, cadence rapide"]},
+  buttKicks:{n:"Talons-fesses",cat:"cardio",cue:"Ramène les talons vers les fesses",s:["Cours sur place","Ramène les talons toucher les fesses","Reste sur l'avant des pieds"]},
+  mountainClimbers:{n:"Mountain Climbers",cat:"cardio",cue:"Gainé, genoux rapides",s:["Position de planche sur les mains","Ramène un genou vers la poitrine","Alterne vite, bassin bas et gainé"]},
+  burpees:{n:"Burpees",cat:"cardio",cue:"Pompe puis saut vertical",s:["Debout, descends les mains au sol","Saute les pieds en arrière (planche)","Reviens en squat puis saute vers le haut"]},
+  crunch:{n:"Crunchs",cat:"core",cue:"Décolle les épaules, souffle",s:["Allongé, genoux pliés, mains aux tempes","Décolle les épaules en soufflant","Redescends lentement sans poser la tête"]},
+  legRaises:{n:"Relevé de jambes",cat:"core",cue:"Jambes tendues, dos plaqué",s:["Allongé, jambes tendues","Monte les jambes vers le plafond","Descends lentement sans creuser le dos"]},
+  plank:{n:"Planche",cat:"core",cue:"Corps aligné, abdos serrés",s:["Sur les avant-bras, corps aligné","Serre abdos et fessiers","Tiens sans creuser ni lever les fesses"]},
+  sidePlank:{n:"Gainage latéral",cat:"core",cue:"30 s de chaque côté",s:["Sur un avant-bras, corps de profil","Décolle le bassin, corps aligné","30 s puis change de côté"]},
+  bicycle:{n:"Bicyclette",cat:"core",cue:"Coude vers genou opposé",s:["Allongé, mains aux tempes","Amène un coude vers le genou opposé","Alterne en pédalant, jambe tendue au loin"]},
+  russianTwist:{n:"Russian Twists",cat:"core",cue:"Rotations contrôlées",s:["Assis, buste incliné en arrière","Mains jointes devant la poitrine","Tourne le buste de gauche à droite"]},
+  pushUp:{n:"Pompes",cat:"upper",cue:"Coudes ~45°, corps gainé",s:["Mains largeur d'épaules, corps gainé","Descends, coudes à ~45°","Pousse pour remonter"]},
+  inclinePush:{n:"Pompes inclinées",cat:"upper",cue:"Mains surélevées (plus facile)",s:["Mains sur une surface surélevée","Descends la poitrine vers l'appui","Pousse pour remonter"]},
+  diamondPush:{n:"Pompes diamant",cat:"upper",cue:"Mains jointes, triceps",s:["Mains jointes en losange sous la poitrine","Descends coudes près du corps","Pousse — cible les triceps"]},
+  dips:{n:"Dips sur chaise",cat:"upper",cue:"Coudes à 90°",s:["Mains sur une chaise, dos vers elle","Descends en pliant les coudes à 90°","Pousse pour remonter"]},
+  pikePush:{n:"Pompes piquées",cat:"upper",cue:"Bassin haut, épaules",s:["En V renversé, bassin bien haut","Descends la tête vers le sol","Pousse — cible les épaules"]},
+  superman:{n:"Superman",cat:"upper",cue:"Décolle bras et jambes",s:["Allongé sur le ventre, bras devant","Décolle bras et jambes ensemble","Tiens 1-2 s puis redescends"]},
+  plankUpDown:{n:"Planche montée-descente",cat:"upper",cue:"Avant-bras ↔ mains",s:["Départ en planche sur les avant-bras","Passe sur les mains une par une","Reviens sur les avant-bras, alterne"]},
+  armCircles:{n:"Cercles de bras",cat:"upper",cue:"Petits cercles, bras tendus",s:["Debout, bras tendus en croix","Petits cercles vers l'avant","Puis vers l'arrière"]},
+  squatJumps:{n:"Squats sautés",cat:"cardio",cue:"Squat puis saut",s:["Descends en squat, cuisses parallèles","Pousse fort et saute","Réceptionne genoux souples, enchaîne"]},
+  skater:{n:"Pas du patineur",cat:"cardio",cue:"Bonds latéraux",s:["Bondis latéralement sur une jambe","Passe l'autre jambe croisée derrière","Alterne côté à côté, comme un patineur"]},
+  crossJacks:{n:"Cross Jacks",cat:"cardio",cue:"Bras et jambes croisés",s:["Saute en croisant les bras devant","Croise aussi les jambes","Alterne le croisement à chaque saut"]},
+  plankJacks:{n:"Planche sautée",cat:"cardio",cue:"Écarte/resserre les pieds",s:["Position de planche sur les mains","Saute pour écarter les pieds","Ressaute pour les resserrer, gainé"]},
+  reverseCrunch:{n:"Crunch inversé",cat:"core",cue:"Genoux vers la poitrine",s:["Allongé, genoux ramenés vers la poitrine","Décolle le bassin vers le haut","Redescends lentement, contrôlé"]},
+  flutterKicks:{n:"Battements de jambes",cat:"core",cue:"Petits battements",s:["Allongé, jambes tendues décollées","Petits battements verticaux alternés","Bas du dos plaqué au sol"]},
+  toeTouches:{n:"Touche-orteils",cat:"core",cue:"Mains vers les pieds",s:["Allongé, jambes tendues vers le plafond","Monte les mains toucher les orteils","Redescends les épaules, souffle"]},
+  hollowHold:{n:"Position creuse",cat:"core",cue:"Corps en banane, dos plaqué",s:["Allongé, bras tendus derrière la tête","Décolle épaules et jambes","Dos plaqué, corps en banane, tiens"]},
+  widePush:{n:"Pompes larges",cat:"upper",cue:"Mains larges, pectoraux",s:["Mains plus larges que les épaules","Descends la poitrine","Pousse — cible les pectoraux"]},
+  shoulderTaps:{n:"Touches d'épaules",cat:"upper",cue:"Touche l'épaule opposée",s:["Position de planche sur les mains","Touche l'épaule opposée avec une main","Alterne sans balancer le bassin"]},
+  inchworm:{n:"La chenille",cat:"upper",cue:"Marche des mains",s:["Debout, penche-toi, mains au sol","Avance les mains jusqu'en planche","Ramène les pieds vers les mains, répète"]},
 };
 
 const POOLS={
@@ -619,7 +626,7 @@ async function startWorkout(){
   try{ if('wakeLock' in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
   const seq=(currentPlan&&currentPlan.length===sel.dur)?currentPlan:buildWorkout(sel.focus,sel.dur);
   const iv=INTENS[sel.intensity];
-  W={seq,iv,idx:0,phase:'work',t:iv.w,paused:false,total:seq.length,startedEx:0};
+  W={seq,iv,idx:0,phase:'prep',t:5,prep:5,paused:false,total:seq.length};
   $('#rnActive').classList.remove('hidden'); $('#rnDone').classList.add('hidden');
   $('#runner').classList.add('show');
   buildDots();
@@ -637,30 +644,45 @@ function updateDots(){
 }
 function applyPhase(){
   const r=$('#runner');
-  r.classList.toggle('work',W.phase==='work');
-  r.classList.toggle('rest',W.phase==='rest');
-  const key=W.seq[W.idx], ex=EX[key];
-  if(W.phase==='work'){
+  const working=W.phase==='work';
+  r.classList.toggle('work',working);
+  r.classList.toggle('rest',!working); // prep + rest use the cool colour
+  if(working){
+    const key=W.seq[W.idx], ex=EX[key];
     $('#rnPhase').textContent='Effort';
     $('#rnName').textContent=ex.n;
     $('#rnCue').textContent=ex.cue;
     $('#rnSvg').innerHTML=DIAG[key]||'';
+    $('#rnSteps').innerHTML=''; // écran d'effort épuré
     $('#rnRound').textContent=`${W.idx+1} / ${W.total}`;
     const nx=W.seq[W.idx+1];
     $('#rnNext').innerHTML=nx?`Ensuite&nbsp;: <b>${EX[nx].n}</b>`:'Dernier exercice 🔥';
   }else{
-    $('#rnPhase').textContent='Repos';
-    const nx=W.seq[W.idx+1];
-    $('#rnName').textContent='Repos';
-    $('#rnCue').textContent='Respire, prépare-toi';
-    $('#rnSvg').innerHTML='';
-    $('#rnRound').textContent='Récupération';
-    $('#rnNext').innerHTML=nx?`À suivre&nbsp;: <b>${EX[nx].n}</b>`:'';
+    const prep=W.phase==='prep';
+    const upKey=prep?W.seq[W.idx]:W.seq[W.idx+1];
+    $('#rnPhase').textContent=prep?'Prépare-toi':'Repos — prépare-toi';
+    if(upKey){
+      const ex=EX[upKey];
+      $('#rnName').textContent=ex.n;
+      $('#rnCue').textContent=ex.cue;
+      $('#rnSvg').innerHTML=DIAG[upKey]||'';
+      renderSteps(upKey);
+      $('#rnRound').textContent=prep?'Prêt ?':'À suivre';
+      $('#rnNext').innerHTML=prep?'Ça démarre !':'Récupère puis enchaîne 👇';
+    }else{
+      $('#rnName').textContent='Repos';$('#rnCue').textContent='Dernier effort passé';
+      $('#rnSvg').innerHTML='';$('#rnSteps').innerHTML='';
+      $('#rnRound').textContent='Récupération';$('#rnNext').innerHTML='';
+    }
   }
   updateDots(); updateRing();
 }
+function renderSteps(key){
+  const s=EX[key]&&EX[key].s;
+  $('#rnSteps').innerHTML=s?s.map((t,i)=>`<div class="step"><span>${i+1}</span><em>${t}</em></div>`).join(''):'';
+}
 function updateRing(){
-  const dur=W.phase==='work'?W.iv.w:W.iv.r;
+  const dur=W.phase==='work'?W.iv.w:(W.phase==='prep'?W.prep:W.iv.r);
   const frac=W.t/dur;
   $('#rnRing').style.strokeDashoffset=RING*(1-frac);
   $('#rnCount').textContent=W.t;
@@ -677,6 +699,10 @@ function tickLoop(){
   },1000);
 }
 function nextPhase(){
+  if(W.phase==='prep'){
+    W.phase='work'; W.t=W.iv.w; beep(920,0.16,0.25); vibrate([40,40,40]);
+    return applyPhase();
+  }
   if(W.phase==='work'){
     // move to rest, unless last exercise
     if(W.idx>=W.total-1){ return finishWorkout(); }
