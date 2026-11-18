@@ -8,7 +8,8 @@
 //   a = pointe du pied (le pied reste à plat par défaut).
 // Options d'un exercice : view {az, el, zoom}, hl (zone colorée), cycle (s),
 //   level {a, b, dy, axis} (deux appuis au sol ensemble), anchor (appui fixe),
-//   pin (mains fixées), bench (chaise/banc sous les mains), contacts (appuis au sol), linear.
+//   pin (mains fixées), bench (chaise/banc sous les mains), wall (mur devant les mains),
+//   contacts (appuis au sol), linear. level.coord 'z' = écart horizontal au lieu de hauteur.
 export const DEFAULT_POSE = {
   x: 0, z: 0, lift: 0, rx: 0, ry: 0, rz: 0, sf: 0, st: 0, ss: 0, nk: 0,
   lsf: 0, lsa: 8, lsh: 0, lst: 0, le: 10, rsf: 0, rsa: 8, rsh: 0, rst: 0, re: 10,
@@ -64,7 +65,9 @@ const circle = (r, n) => Array.from({ length: n }, (_, i) => {
 const lunge = { lhf: -32, lk: 100, la: 45, rhf: 82, rk: 92, sf: 4, lsa: 12, rsa: 12 };
 const sCrunch = W(TEMPLES, { lhf: 85, lk: 95, st: 28, ss: 10, sf: 12 });
 
-const crunchBase = W(SUPINE, TEMPLES, { lhf: 50, rhf: 50, lk: 105, rk: 105 });
+// bras croisés sur la poitrine (conseil Mayo Clinic pour ménager la nuque)
+const CHEST = { lsf: 35, rsf: 35, lsh: 70, rsh: 70, le: 115, re: 115, lsa: 8, rsa: 8 };
+const crunchBase = W(SUPINE, CHEST, { lhf: 50, rhf: 50, lk: 105, rk: 105 });
 const bike = W(SUPINE, TEMPLES, { sf: 30, st: -24, lhf: 85, lk: 95, rhf: 22, rk: 4 });
 const russian = { rx: -45, lhf: 112, rhf: 112, lk: 95, rk: 95, lsf: 60, rsf: 60, le: 85, re: 85, lsh: 35, rsh: 35 };
 
@@ -79,6 +82,11 @@ const dipDn = { lsf: -75, rsf: -75, le: 85, re: 85, lsa: 8, rsa: 8, lhf: 70, rhf
 
 const pike = { rx: 135, lhf: 95, rhf: 95, lsf: 178, rsf: 178, le: 0, re: 0 };
 const fold = { sf: 115, lsf: 165, rsf: 165, le: 0, re: 0 };
+
+const QUAD = W(PRONE, { lhf: 90, rhf: 90, lk: 90, rk: 90, la: 40, ra: 40, lha: 6, rha: 6 });
+const bridgeDown = W(SUPINE, { lhf: 50, rhf: 50, lk: 105, rk: 105 });
+const bridgeUp = { rx: -112, lhf: -15, rhf: -15, lk: 100, rk: 100, lsf: -25, rsf: -25, le: 0, re: 0 };
+const birdA = W(QUAD, { rsf: 178, lhf: 0, lk: 0, la: 20 });
 
 export const ANIMS = {
   // ---------- cardio ----------
@@ -122,7 +130,7 @@ export const ANIMS = {
     cycle: 2.2, view: { az: 20, el: 32 }, hl: 'core',
   },
   // ---------- abdos / gainage ----------
-  crunch: { keys: [crunchBase, W(crunchBase, { sf: 38, nk: 12 })], cycle: 1.8, view: BACK_SIDE, hl: 'core' },
+  crunch: { keys: [crunchBase, W(crunchBase, { sf: 38, nk: 12 })], cycle: 1.8, view: { az: 70, el: 25 }, hl: 'core' },
   legRaises: {
     keys: [W(SUPINE, { lhf: 8, rhf: 8 }), W(SUPINE, { lhf: 85, rhf: 85 })],
     cycle: 2.4, view: BACK_SIDE, hl: 'core',
@@ -154,6 +162,32 @@ export const ANIMS = {
   sidePlank: {
     keys: [sPlank, W(sPlank, { ss: -8 })], cycle: 2.6, view: { az: 8, el: 14 }, hl: 'core',
     level: { a: 'elbow', b: 'foot', axis: 'rz' },
+  },
+  // ---------- ajouts Mayo Clinic / BHF / ACE ----------
+  gluteBridge: {
+    keys: [bridgeDown, bridgeUp], cycle: 2.4, view: { az: 100, el: 22 }, hl: 'core',
+    level: { a: 'chest', b: 'heel' },
+  },
+  birdDog: {
+    keys: [QUAD, birdA, QUAD, M(birdA)], cycle: 4.0, view: { az: 60, el: 18 }, hl: 'core',
+    level: { a: 'hand', b: 'knee' }, contacts: ['hand', 'knee', 'toe'],
+  },
+  kneePlank: {
+    keys: [W(fPlank, { lk: 95, rk: 95 }), W(fPlank, { lk: 95, rk: 95, nk: -6 })], cycle: 3, view: SIDE, hl: 'core',
+    level: { a: 'elbow', b: 'knee' },
+  },
+  catCow: {
+    keys: [W(QUAD, { nk: 45, sf: 6, lsf: 96, rsf: 96 }), W(QUAD, { nk: -35, sf: -8, lsf: 84, rsf: 84 })],
+    cycle: 3.2, view: { az: 85, el: 8 }, hl: 'core', contacts: ['hand', 'knee', 'toe'],
+  },
+  wallPush: {
+    keys: [{ rx: 18, lsf: 72, rsf: 72, le: 0, re: 0, lsa: 10, rsa: 10 }, { rx: 30, lsf: 65, rsf: 65, le: 95, re: 95, lsa: 25, rsa: 25 }],
+    cycle: 2.2, view: { az: 75, el: 10 }, hl: 'arms', level: { a: 'hand', b: 'toe', coord: 'z', dz: 0.95 }, anchor: 'toe', wall: {},
+  },
+  cobra: {
+    keys: [W(PRONE, { lsf: 15, rsf: 15, le: 120, re: 120, lsa: 30, rsa: 30 }),
+      W(PRONE, { sf: -40, nk: -15, lsf: 55, rsf: 55, le: 25, re: 25, lsa: 15, rsa: 15 })],
+    cycle: 3.0, view: { az: 75, el: 14 }, hl: 'core',
   },
   // ---------- haut du corps ----------
   pushUp: { keys: [pushUp, pushDn], cycle: 1.8, view: SIDE, hl: 'arms', level: PLANK_LV, anchor: 'toe' },

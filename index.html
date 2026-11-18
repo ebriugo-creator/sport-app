@@ -143,6 +143,9 @@
   .ex-steps{max-width:330px;margin:12px auto 0;display:flex;flex-direction:column;gap:7px;text-align:left;}
   .ex-steps .step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.35;}
   .ex-steps .step em{font-style:normal;color:var(--text);}
+  .ex-steps .tip{display:flex;gap:8px;align-items:flex-start;margin-top:3px;padding:8px 10px;border-radius:12px;
+    background:#2a2416;border:1px solid #4a3b1a;font-size:13px;line-height:1.35;}
+  .ex-steps .tip em{font-style:normal;color:#f3dca8;}
   .ex-steps .step span{flex-shrink:0;width:21px;height:21px;border-radius:50%;background:var(--surface2);
     color:var(--rest);font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px;}
 
@@ -550,7 +553,7 @@ const EX={
   buttKicks:{n:"Talons-fesses",cat:"cardio",cue:"Ramène les talons vers les fesses",s:["Cours sur place","Ramène les talons toucher les fesses","Reste sur l'avant des pieds"]},
   mountainClimbers:{n:"Mountain Climbers",cat:"cardio",cue:"Gainé, genoux rapides",s:["Position de planche sur les mains","Ramène un genou vers la poitrine","Alterne vite, bassin bas et gainé"]},
   burpees:{n:"Burpees",cat:"cardio",cue:"Pompe puis saut vertical",s:["Debout, descends les mains au sol","Saute les pieds en arrière (planche)","Reviens en squat puis saute vers le haut"]},
-  crunch:{n:"Crunchs",cat:"core",cue:"Décolle les épaules, souffle",s:["Allongé, genoux pliés, mains aux tempes","Décolle les épaules en soufflant","Redescends lentement sans poser la tête"]},
+  crunch:{n:"Crunchs",cat:"core",cue:"Décolle les épaules, souffle",s:["Allongé, genoux pliés, bras croisés sur la poitrine","Décolle les épaules en soufflant","Redescends lentement sans poser la tête"]},
   legRaises:{n:"Relevé de jambes",cat:"core",cue:"Jambes tendues, dos plaqué",s:["Allongé, jambes tendues","Monte les jambes vers le plafond","Descends lentement sans creuser le dos"]},
   plank:{n:"Planche",cat:"core",cue:"Corps aligné, abdos serrés",s:["Sur les avant-bras, corps aligné","Serre abdos et fessiers","Tiens sans creuser ni lever les fesses"]},
   sidePlank:{n:"Gainage latéral",cat:"core",cue:"30 s de chaque côté",s:["Sur un avant-bras, corps de profil","Décolle le bassin, corps aligné","30 s puis change de côté"]},
@@ -583,6 +586,62 @@ const EX={
   standingCrunch:{n:"Genou-coude debout",cat:"cardio",soft:1,alt:"highKnees",cue:"Coude vers le genou opposé",s:["Debout, mains derrière la tête","Monte un genou vers le coude opposé","Alterne les côtés, sans te presser"]},
   torsoTwist:{n:"Rotations du buste",cat:"cardio",soft:1,alt:"russianTwist",cue:"Tourne le buste, bassin fixe",s:["Debout, bras tendus devant toi","Tourne le buste d'un côté puis de l'autre","Le bassin reste face à l'avant"]},
 };
+// --- Ajouts inspirés de la Mayo Clinic, de la British Heart Foundation et de l'ACE ---
+Object.assign(EX,{
+  gluteBridge:{n:"Pont fessier",cat:"core",alt:"crunch",cue:"Hanches alignées genoux-épaules",s:["Allongé sur le dos, genoux pliés, pieds au sol","Serre les fessiers et monte le bassin","Genoux, hanches et épaules alignés, puis redescends lentement"]},
+  birdDog:{n:"Bird dog",cat:"core",alt:"superman",cue:"Bras et jambe opposés tendus",s:["À quatre pattes, mains sous les épaules, genoux sous les hanches","Tends un bras devant et la jambe opposée derrière","Reviens et change de côté, dos bien plat"]},
+  kneePlank:{n:"Planche sur les genoux",cat:"core",soft:1,alt:"plank",cue:"Avant-bras et genoux au sol",s:["Avant-bras au sol, coudes sous les épaules","Genoux posés, corps aligné de la tête aux genoux","Serre les abdos et tiens en respirant"]},
+  catCow:{n:"Chat-vache",cat:"core",soft:1,alt:"plank",cue:"Dos rond, puis dos creux",s:["À quatre pattes, dos plat","Arrondis le dos en rentrant le menton (le chat)","Creuse doucement le dos en levant la tête (la vache)"]},
+  wallPush:{n:"Pompes contre le mur",cat:"upper",soft:1,alt:"inclinePush",cue:"Penche-toi vers le mur",s:["Debout, à une longueur de bras du mur","Mains sur le mur à hauteur d'épaules","Plie les coudes vers le mur, puis repousse"]},
+  cobra:{n:"Cobra",cat:"upper",soft:1,alt:"superman",cue:"Pousse et ouvre la poitrine",s:["Allongé sur le ventre, mains sous les épaules","Pousse doucement pour relever le buste","Bassin au sol, redescends lentement"]},
+});
+// Conseil de sécurité affiché avec les consignes (Mayo Clinic, British Heart Foundation, ACE)
+const TIPS={
+  jumpingJacks:"Atterris en souplesse sur l'avant du pied, genoux légèrement fléchis.",
+  highKnees:"Garde le buste droit et respire régulièrement.",
+  buttKicks:"Reste léger sur l'avant des pieds, buste droit.",
+  mountainClimbers:"Mains sous les épaules, bassin aligné : ne le monte pas.",
+  burpees:"Réceptionne-toi genoux souples ; ralentis si la technique se dégrade.",
+  crunch:"Bras croisés sur la poitrine plutôt que derrière la tête, pour ménager la nuque.",
+  legRaises:"Si le bas du dos se décolle, plie légèrement les genoux.",
+  plank:"Tête dans l'alignement du dos ; respire normalement, sans bloquer.",
+  sidePlank:"Épaules, hanches et pieds sur une même ligne.",
+  bicycle:"Ne tire pas sur la nuque : les mains effleurent les tempes.",
+  russianTwist:"Tourne avec le buste, pas seulement avec les bras ; dos droit.",
+  pushUp:"Corps gainé de la tête aux pieds ; souffle en poussant.",
+  inclinePush:"Choisis un appui stable qui ne glisse pas.",
+  diamondPush:"Trop dur ? Pose les genoux au sol.",
+  dips:"Épaules basses, loin des oreilles ; descends sans douleur.",
+  pikePush:"Descends lentement, tête entre les mains.",
+  superman:"Mouvement contrôlé ; une serviette roulée sous le bassin soulage le bas du dos.",
+  plankUpDown:"Écarte un peu les pieds pour limiter le balancement du bassin.",
+  armCircles:"Épaules basses et détendues.",
+  squatJumps:"Genoux dans l'axe des pieds à la réception.",
+  skater:"Réceptionne-toi en douceur, genou au-dessus du pied.",
+  crossJacks:"Rythme régulier, atterrissage souple.",
+  plankJacks:"Bassin stable : ne laisse pas le dos se creuser.",
+  reverseCrunch:"Monte le bassin avec les abdos, sans prendre d'élan.",
+  flutterKicks:"Plus les jambes sont basses, plus c'est dur : remonte-les si le dos se creuse.",
+  toeTouches:"Souffle en montant, redescends lentement.",
+  hollowHold:"Bas du dos plaqué au sol ; plie les genoux pour simplifier.",
+  widePush:"Coudes pas trop ouverts, pour protéger les épaules.",
+  shoulderTaps:"Écarte un peu les pieds pour garder le bassin immobile.",
+  inchworm:"Plie légèrement les genoux si l'arrière des jambes tire.",
+  stepJacks:"Commence petit et augmente l'amplitude au fil des répétitions.",
+  march:"Respire calmement et accélère petit à petit.",
+  squat:"Talons au sol, genoux dans l'axe des pieds ; souffle en remontant.",
+  reverseLunge:"Buste droit, genou avant au-dessus de la cheville.",
+  standingCrunch:"Contracte les abdos à chaque montée de genou.",
+  torsoTwist:"Mouvement fluide, sans à-coups.",
+  gluteBridge:"Ne creuse pas le dos en haut : hanches alignées avec genoux et épaules.",
+  birdDog:"Tête alignée avec le dos ; commence par le bras seul ou la jambe seule si besoin.",
+  kneePlank:"Tête alignée avec le dos : c'est la version facile de la planche.",
+  catCow:"Va lentement, sans forcer l'amplitude.",
+  wallPush:"Plus tes pieds sont loin du mur, plus c'est difficile.",
+  cobra:"Garde le bassin au sol et arrête-toi avant toute gêne dans le dos.",
+};
+for(const k in TIPS) if(EX[k]) EX[k].tip=TIPS[k];
+
 // Exercices à sauts / impact, retirés en mode réveil
 const IMPACT=new Set(["jumpingJacks","highKnees","buttKicks","mountainClimbers","burpees","squatJumps","skater","crossJacks","plankJacks"]);
 
@@ -592,7 +651,7 @@ const POOLS={
   complet:{seq:["cardio","upper","core"],warm:"jumpingJacks",end:"plank"},
 };
 // Mode réveil : on garde les mêmes objectifs mais on change l'échauffement.
-const MORNING_WARM={ventre:"march",haut:"armCircles",complet:"march"};
+const MORNING_WARM={ventre:"catCow",haut:"armCircles",complet:"march"};
 // En mode réveil : pas d'exercice à impact, exercices doux en plus. Sinon : pool habituel.
 const allowed=(k,morning)=>morning?!IMPACT.has(k):!EX[k].soft;
 const byCat=(cat,morning)=>Object.keys(EX).filter(k=>EX[k].cat===cat&&allowed(k,morning));
@@ -762,7 +821,9 @@ function showVisual(key,working){
 }
 function renderSteps(key){
   const s=EX[key]&&EX[key].s;
-  $('#rnSteps').innerHTML=s?s.map((t,i)=>`<div class="step"><span>${i+1}</span><em>${t}</em></div>`).join(''):'';
+  const tip=EX[key]&&EX[key].tip;
+  $('#rnSteps').innerHTML=(s?s.map((t,i)=>`<div class="step"><span>${i+1}</span><em>${t}</em></div>`).join(''):'')
+    +(tip?`<div class="tip"><span>💡</span><em>${tip}</em></div>`:'');
 }
 function updateRing(){
   const dur=W.phase==='work'?W.iv.w:(W.phase==='prep'?W.prep:W.iv.r);
