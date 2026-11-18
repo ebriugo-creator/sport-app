@@ -158,7 +158,7 @@ class Mannequin {
 
 const GROUPS = {
   hand: ['hand'], elbow: ['elbow'], toe: ['toe'], heel: ['heel'], foot: ['toe', 'heel'],
-  arm: ['hand', 'elbow'], knee: ['knee'], pelvis: ['pelvis'],
+  arm: ['hand', 'elbow'], knee: ['knee'], pelvis: ['pelvis'], chest: ['chest'],
 };
 
 function lerpPose(a, b, t) {
@@ -223,6 +223,10 @@ class Stage {
     this.bench.castShadow = this.bench.receiveShadow = true;
     this.bench.visible = false;
     this.scene.add(this.bench);
+    this.wall = new Mesh(new BoxGeometry(1, 1, 1), new MeshLambertMaterial({ color: 0x3b4157 }));
+    this.wall.receiveShadow = true;
+    this.wall.visible = false;
+    this.scene.add(this.wall);
 
     this.t = 0; this.paused = false; this.clip = null; this.raf = 0; this.last = 0;
   }
@@ -259,6 +263,7 @@ class Stage {
     const f = ang => {
       root.rotation[ax.slice(1)] = ang;
       root.updateMatrixWorld(true);
+      if (lv.coord === 'z') return man.avg(A).z - man.avg(B).z - (lv.dz || 0);
       return man.low(A) - man.low(B) - dy;
     };
     let lo = base - 45 * D, hi = base + 45 * D, flo = f(lo), fhi = f(hi);
@@ -306,6 +311,16 @@ class Stage {
       this.bench.scale.set(0.95, top, def.bench.depth || 0.38);
       this.bench.position.set(h.x, top / 2, h.z + (def.bench.dz || 0));
       mn.min(new Vector3(-0.5, 0, h.z - 0.2)); mx.max(new Vector3(0.5, top, h.z + 0.2));
+    }
+
+    // mur (pompes contre le mur)
+    this.wall.visible = !!def.wall;
+    if (def.wall) {
+      this.place(this.clip.pose(0));
+      const h = man.avg(['hand']);
+      this.wall.scale.set(1.1, 1.8, 0.06);
+      this.wall.position.set(h.x, 0.9, h.z + 0.08);
+      mx.max(new Vector3(0.55, 1.8, h.z + 0.11));
     }
 
     // caméra
