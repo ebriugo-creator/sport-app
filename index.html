@@ -102,8 +102,14 @@
 
   /* ===== Workout runner (overlay) ===== */
   .runner{position:fixed;inset:0;max-width:520px;margin:0 auto;background:var(--bg);z-index:50;
-    display:none;flex-direction:column;padding:calc(env(safe-area-inset-top) + 14px) 18px 22px;}
+    display:none;flex-direction:column;overflow:hidden;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 14px);}
   .runner.show{display:flex;}
+  /* Séance : en-tête et boutons toujours visibles, le contenu du milieu défile si l'écran est petit */
+  #rnActive{display:flex;flex-direction:column;flex:1;min-height:0;}
+  .rn-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    display:flex;flex-direction:column;padding-bottom:6px;}
+  #rnDone{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:10px;}
   .runner.rest{background:radial-gradient(120% 80% at 50% 0%, #10201f 0%, var(--bg) 60%);}
   .runner.work{background:radial-gradient(120% 80% at 50% 0%, #22140f 0%, var(--bg) 55%);}
   .rn-top{display:flex;align-items:center;justify-content:space-between;}
@@ -114,7 +120,7 @@
   .dot{height:4px;flex:1;min-width:6px;border-radius:3px;background:var(--line);}
   .dot.done{background:var(--muted);} .work .dot.cur{background:var(--effort);} .rest .dot.cur{background:var(--rest);}
 
-  .ring-wrap{position:relative;width:min(74vw,300px);aspect-ratio:1;margin:8px auto 4px;}
+  .ring-wrap{position:relative;width:min(74vw,300px,34vh);width:min(74vw,300px,34dvh);aspect-ratio:1;margin:8px auto 4px;flex-shrink:0;}
   .ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
   .ring-bg{fill:none;stroke:var(--surface2);stroke-width:10;}
   .ring-fg{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke .3s;}
@@ -139,7 +145,13 @@
 
   .next-up{text-align:center;color:var(--faint);font-size:13px;margin-top:auto;padding-top:10px;}
   .next-up b{color:var(--muted);}
-  .rn-controls{display:flex;gap:12px;margin-top:14px;}
+  .rn-controls{display:flex;gap:12px;margin-top:10px;flex-shrink:0;}
+  @media (max-height:700px){
+    .ring-center .count{font-size:58px;}
+    .ex-name{font-size:26px;}
+    .ex-steps{margin-top:8px;gap:5px;}
+    .ctrl{padding:13px;}
+  }
   .ctrl{flex:1;padding:15px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
     font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;}
   .ctrl.primary{background:var(--surface2);}
@@ -314,6 +326,7 @@
       <button class="rn-quit" id="rnQuit">Quitter</button>
     </div>
     <div class="prog-dots" id="rnDots"></div>
+    <div class="rn-body" id="rnBody">
     <div class="ring-wrap">
       <svg viewBox="0 0 120 120">
         <circle class="ring-bg" cx="60" cy="60" r="52"/>
@@ -329,6 +342,7 @@
     <div class="ex-svg" id="rnSvg"></div>
     <div class="ex-steps" id="rnSteps"></div>
     <div class="next-up" id="rnNext"></div>
+    </div>
     <div class="rn-controls">
       <button class="ctrl" id="rnPause"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg><span>Pause</span></button>
       <button class="ctrl primary" id="rnSkip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 5l11 7-11 7zM18 5h2v14h-2z"/></svg>Passer</button>
@@ -728,6 +742,7 @@ function applyPhase(){
     }
   }
   updateDots(); updateRing();
+  $('#rnBody').scrollTop=0;
 }
 // Animation 3D de l'exercice (zone travaillée colorée), dessin 2D si la 3D n'est pas dispo.
 let shown3d=null;
