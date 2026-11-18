@@ -1,0 +1,11 @@
+{
+  "name": "cardio-maison",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/mannequin3d.js --bundle --minify --format=iife --target=es2019 --outfile=mannequin3d.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "three": "0.187.0"
+  }
+}

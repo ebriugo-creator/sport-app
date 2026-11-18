@@ -64,6 +64,21 @@
   .intens .s{font-size:11px;color:var(--muted);margin-top:2px;}
   .intens button.on{border-color:var(--effort);background:#241a18;}
 
+  /* Mode réveil */
+  .morning{margin-top:12px;width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;transition:.18s;}
+  .morning .mi{font-size:24px;line-height:1;filter:grayscale(1);opacity:.6;transition:.18s;}
+  .morning .mt{flex:1;display:flex;flex-direction:column;gap:2px;}
+  .morning .mt b{font-size:14px;}
+  .morning .mt small{font-size:12px;color:var(--muted);}
+  .morning .sw{width:44px;height:26px;border-radius:13px;background:var(--surface2);border:1px solid var(--line);position:relative;flex-shrink:0;transition:.18s;}
+  .morning .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--muted);transition:.18s;}
+  .morning.on{border-color:var(--amber);background:#2a2416;}
+  .morning.on .mi{filter:none;opacity:1;}
+  .morning.on .sw{background:var(--amber);border-color:var(--amber);}
+  .morning.on .sw::after{left:21px;background:#fff;}
+  .pv-tag.soft i{background:var(--amber);}
+
   /* Preview card */
   .preview{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;}
   .preview .row{display:flex;justify-content:space-between;align-items:baseline;}
@@ -113,6 +128,9 @@
   .ex-svg{width:100%;max-width:320px;margin:6px auto 0;}
   .ex-svg svg{width:100%;height:auto;display:block;}
   .work .ex-svg{color:var(--effort);} .rest .ex-svg{color:var(--rest);}
+  .ex-svg canvas.ex3d{display:block;margin:0 auto;max-width:100%;height:auto;
+    -webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 62%,transparent 100%);
+    mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 62%,transparent 100%);}
   .ex-steps{max-width:330px;margin:12px auto 0;display:flex;flex-direction:column;gap:7px;text-align:left;}
   .ex-steps .step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.35;}
   .ex-steps .step em{font-style:normal;color:var(--text);}
@@ -228,6 +246,12 @@
       <button data-int="intense"><div class="t">Intense</div><div class="s">45s / 15s</div></button>
     </div>
 
+    <button class="morning" id="morningBtn" aria-pressed="false">
+      <span class="mi">☀️</span>
+      <span class="mt"><b>Réveil en douceur</b><small>Sans sauts ni burpees — idéal au lever</small></span>
+      <span class="sw"></span>
+    </button>
+
     <div class="preview" id="preview">
       <div class="row">
         <div><div class="big" id="pvTitle">15 min</div><div class="sub" id="pvSub">15 exercices · effort/repos</div></div>
@@ -325,6 +349,7 @@
   </div>
 </div>
 
+<script src="mannequin3d.js" defer></script>
 <script>
 /* ============ DIAGRAMS (SVG stick figures) ============ */
 const G='stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"';
@@ -533,22 +558,36 @@ const EX={
   widePush:{n:"Pompes larges",cat:"upper",cue:"Mains larges, pectoraux",s:["Mains plus larges que les épaules","Descends la poitrine","Pousse — cible les pectoraux"]},
   shoulderTaps:{n:"Touches d'épaules",cat:"upper",cue:"Touche l'épaule opposée",s:["Position de planche sur les mains","Touche l'épaule opposée avec une main","Alterne sans balancer le bassin"]},
   inchworm:{n:"La chenille",cat:"upper",cue:"Marche des mains",s:["Debout, penche-toi, mains au sol","Avance les mains jusqu'en planche","Ramène les pieds vers les mains, répète"]},
+  // --- Exercices doux, réservés au mode réveil (aucun saut) ---
+  stepJacks:{n:"Jacks sans saut",cat:"cardio",soft:1,alt:"jumpingJacks",cue:"Une jambe à la fois, bras en l'air",s:["Debout, bras le long du corps","Écarte une jambe sur le côté en levant les bras","Reviens, puis l'autre jambe — sans sauter"]},
+  march:{n:"Marche genoux levés",cat:"cardio",soft:1,alt:"highKnees",cue:"Marche sur place, genoux hauts",s:["Debout, buste droit","Monte un genou vers la hanche","Alterne tranquillement, bras qui accompagnent"]},
+  squat:{n:"Squats",cat:"cardio",soft:1,alt:"squatJumps",cue:"Descends lentement, talons au sol",s:["Pieds largeur de hanches","Descends les fesses en arrière, bras devant","Remonte en poussant dans les talons"]},
+  reverseLunge:{n:"Fentes arrière",cat:"cardio",soft:1,alt:"skater",cue:"Un grand pas en arrière",s:["Debout, pieds joints","Recule une jambe et plie les deux genoux","Reviens et change de jambe"]},
+  standingCrunch:{n:"Genou-coude debout",cat:"cardio",soft:1,alt:"highKnees",cue:"Coude vers le genou opposé",s:["Debout, mains derrière la tête","Monte un genou vers le coude opposé","Alterne les côtés, sans te presser"]},
+  torsoTwist:{n:"Rotations du buste",cat:"cardio",soft:1,alt:"russianTwist",cue:"Tourne le buste, bassin fixe",s:["Debout, bras tendus devant toi","Tourne le buste d'un côté puis de l'autre","Le bassin reste face à l'avant"]},
 };
+// Exercices à sauts / impact, retirés en mode réveil
+const IMPACT=new Set(["jumpingJacks","highKnees","buttKicks","mountainClimbers","burpees","squatJumps","skater","crossJacks","plankJacks"]);
 
 const POOLS={
   ventre:{seq:["cardio","core"],warm:"jumpingJacks",end:"plank"},
   haut:{seq:["upper","upper","core"],warm:"armCircles",end:"superman"},
   complet:{seq:["cardio","upper","core"],warm:"jumpingJacks",end:"plank"},
 };
-const byCat=cat=>Object.keys(EX).filter(k=>EX[k].cat===cat);
+// Mode réveil : on garde les mêmes objectifs mais on change l'échauffement.
+const MORNING_WARM={ventre:"march",haut:"armCircles",complet:"march"};
+// En mode réveil : pas d'exercice à impact, exercices doux en plus. Sinon : pool habituel.
+const allowed=(k,morning)=>morning?!IMPACT.has(k):!EX[k].soft;
+const byCat=(cat,morning)=>Object.keys(EX).filter(k=>EX[k].cat===cat&&allowed(k,morning));
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function buildWorkout(focus,minutes){
-  const p=POOLS[focus], count=minutes; // 60s cycles => 1 exercise / min
+function buildWorkout(focus,minutes,morning){
+  const p=Object.assign({},POOLS[focus]), count=minutes; // 60s cycles => 1 exercise / min
+  if(morning) p.warm=MORNING_WARM[focus];
   const bags={}, idx={}; let last="";
   // draw from a per-category shuffled bag => varied order each session, no back-to-back repeat
   const draw=(cat)=>{
-    if(!bags[cat]||idx[cat]>=bags[cat].length){ bags[cat]=shuffle(byCat(cat)); idx[cat]=0; }
+    if(!bags[cat]||idx[cat]>=bags[cat].length){ bags[cat]=shuffle(byCat(cat,morning)); idx[cat]=0; }
     let k=bags[cat][idx[cat]++];
     if(k===last && idx[cat]<bags[cat].length){ const nk=bags[cat][idx[cat]]; bags[cat][idx[cat]]=k; k=nk; idx[cat]++; }
     last=k; return k;
@@ -568,27 +607,40 @@ const store={
 let mem=[];
 try{ mem=JSON.parse(localStorage.getItem('cm_sessions')||'[]'); }catch(e){ mem=[]; }
 
-let sel={focus:"ventre",dur:15,intensity:"standard"};
+let sel={focus:"ventre",dur:15,intensity:"standard",morning:false};
 const INTENS={doux:{w:30,r:30},standard:{w:40,r:20},intense:{w:45,r:15}};
 
 /* ============ SÉANCE UI ============ */
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 
 function renderPreview(){
-  currentPlan=buildWorkout(sel.focus,sel.dur);
-  $('#pvTitle').textContent=sel.dur+' min';
+  currentPlan=buildWorkout(sel.focus,sel.dur,sel.morning);
+  $('#pvTitle').textContent=sel.dur+' min'+(sel.morning?' ☀️':'');
   const iv=INTENS[sel.intensity];
-  $('#pvSub').textContent=`${currentPlan.length} exercices · ${iv.w}s effort / ${iv.r}s repos`;
+  $('#pvSub').textContent=`${currentPlan.length} exercices · ${iv.w}s effort / ${iv.r}s repos`+(sel.morning?' · sans sauts':'');
   const uniq=[...new Set(currentPlan)];
-  $('#pvList').innerHTML=uniq.map(k=>`<span class="pv-tag"><i></i>${EX[k].n}</span>`).join('');
+  $('#pvList').innerHTML=uniq.map(k=>`<span class="pv-tag${EX[k].soft?' soft':''}"><i></i>${EX[k].n}</span>`).join('');
 }
+function setIntensity(v){
+  sel.intensity=v;
+  $$('#intensSeg button').forEach(x=>x.classList.toggle('on',x.dataset.int===v));
+}
+// Mode réveil : passe aussi en intensité douce (on revient à l'ancienne en le désactivant)
+let intensBeforeMorning=null;
+$('#morningBtn').addEventListener('click',()=>{
+  sel.morning=!sel.morning;
+  const b=$('#morningBtn'); b.classList.toggle('on',sel.morning); b.setAttribute('aria-pressed',sel.morning);
+  if(sel.morning){ intensBeforeMorning=sel.intensity; setIntensity('doux'); }
+  else if(intensBeforeMorning){ setIntensity(intensBeforeMorning); intensBeforeMorning=null; }
+  renderPreview();
+});
 $('#pvShuffle').addEventListener('click',()=>{ renderPreview(); $('#pvList').classList.remove('pulse'); void $('#pvList').offsetWidth; $('#pvList').classList.add('pulse'); });
 $('#focusSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   $$('#focusSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sel.focus=b.dataset.focus;renderPreview();});
 $('#durChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   $$('#durChips button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sel.dur=+b.dataset.dur;renderPreview();});
 $('#intensSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  $$('#intensSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sel.intensity=b.dataset.int;renderPreview();});
+  setIntensity(b.dataset.int);intensBeforeMorning=null;renderPreview();});
 
 /* ============ NAV ============ */
 $$('.nav button').forEach(b=>b.addEventListener('click',()=>{
@@ -624,9 +676,9 @@ $('#rnRing').style.strokeDasharray=RING;
 async function startWorkout(){
   try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume(); }catch(e){}
   try{ if('wakeLock' in navigator) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
-  const seq=(currentPlan&&currentPlan.length===sel.dur)?currentPlan:buildWorkout(sel.focus,sel.dur);
+  const seq=(currentPlan&&currentPlan.length===sel.dur)?currentPlan:buildWorkout(sel.focus,sel.dur,sel.morning);
   const iv=INTENS[sel.intensity];
-  W={seq,iv,idx:0,phase:'prep',t:5,prep:5,paused:false,total:seq.length};
+  W={seq,iv,idx:0,phase:'prep',t:5,prep:5,paused:false,total:seq.length,morning:sel.morning};
   $('#rnActive').classList.remove('hidden'); $('#rnDone').classList.add('hidden');
   $('#runner').classList.add('show');
   buildDots();
@@ -652,7 +704,7 @@ function applyPhase(){
     $('#rnPhase').textContent='Effort';
     $('#rnName').textContent=ex.n;
     $('#rnCue').textContent=ex.cue;
-    $('#rnSvg').innerHTML=DIAG[key]||'';
+    showVisual(key,true);
     $('#rnSteps').innerHTML=''; // écran d'effort épuré
     $('#rnRound').textContent=`${W.idx+1} / ${W.total}`;
     const nx=W.seq[W.idx+1];
@@ -665,17 +717,30 @@ function applyPhase(){
       const ex=EX[upKey];
       $('#rnName').textContent=ex.n;
       $('#rnCue').textContent=ex.cue;
-      $('#rnSvg').innerHTML=DIAG[upKey]||'';
+      showVisual(upKey,false);
       renderSteps(upKey);
       $('#rnRound').textContent=prep?'Prêt ?':'À suivre';
       $('#rnNext').innerHTML=prep?'Ça démarre !':'Récupère puis enchaîne 👇';
     }else{
       $('#rnName').textContent='Repos';$('#rnCue').textContent='Dernier effort passé';
-      $('#rnSvg').innerHTML='';$('#rnSteps').innerHTML='';
+      showVisual(null);$('#rnSteps').innerHTML='';
       $('#rnRound').textContent='Récupération';$('#rnNext').innerHTML='';
     }
   }
   updateDots(); updateRing();
+}
+// Animation 3D de l'exercice (zone travaillée colorée), dessin 2D si la 3D n'est pas dispo.
+let shown3d=null;
+function showVisual(key,working){
+  const el=$('#rnSvg'), col=working?0xFF5A3C:0x33D6C4;
+  const X=window.Ex3D;
+  if(key&&X&&X.ok&&X.has(key)){
+    if(shown3d===key&&el.querySelector('canvas')){ X.setColor(col); return; }
+    if(X.show(el,key,col)){ shown3d=key; X.pause(W&&W.paused); return; }
+  }
+  if(X&&X.ok) X.stop();
+  shown3d=null;
+  el.innerHTML=key?(DIAG[key]||DIAG[EX[key].alt]||''):'';
 }
 function renderSteps(key){
   const s=EX[key]&&EX[key].s;
@@ -716,6 +781,7 @@ function nextPhase(){
 $('#rnPause').addEventListener('click',()=>{
   W.paused=!W.paused;
   $('#rnPause').querySelector('span').textContent=W.paused?'Reprendre':'Pause';
+  if(window.Ex3D&&Ex3D.ok) Ex3D.pause(W.paused);
 });
 $('#rnSkip').addEventListener('click',()=>{ if(!W)return; W.t=1; });
 $('#rnQuit').addEventListener('click',()=>{ if(confirm('Quitter la séance ? Elle ne sera pas enregistrée.')) closeRunner(false); });
@@ -725,18 +791,22 @@ function finishWorkout(){
   beep(1046,0.5,0.3); vibrate([80,60,80,60,180]);
   // log session
   const today=new Date();
-  const rec={date:fmtDate(today),ts:today.getTime(),minutes:W.total,focus:sel.focus,intensity:sel.intensity,ex:W.total};
+  const rec={date:fmtDate(today),ts:today.getTime(),minutes:W.total,focus:sel.focus,intensity:sel.intensity,ex:W.total,morning:!!W.morning};
   const arr=store.get(); arr.push(rec); store.set(arr);
   const streak=calcStreak(arr);
   $('#doneMin').textContent=W.total;
   $('#doneEx').textContent=W.total;
   $('#doneStreak').textContent=streak;
-  $('#doneSub').textContent=`${focusLabel(sel.focus)} · ${labelInt(sel.intensity)}`;
+  if(window.Ex3D&&Ex3D.ok) Ex3D.stop();
+  $('#doneSub').textContent=`${focusLabel(sel.focus)} · ${labelInt(sel.intensity)}`+(W.morning?' · Réveil ☀️':'');
   $('#rnActive').classList.add('hidden');
   $('#rnDone').classList.remove('hidden');
 }
 function closeRunner(){
   clearInterval(loopId); W=null;
+  if(window.Ex3D&&Ex3D.ok) Ex3D.stop();
+  shown3d=null; $('#rnSvg').innerHTML='';
+  $('#rnPause').querySelector('span').textContent='Pause';
   $('#runner').classList.remove('show','work','rest');
   try{ wakeLock&&wakeLock.release&&wakeLock.release(); wakeLock=null; }catch(e){}
 }
@@ -837,7 +907,7 @@ function renderLog(arr){
     const day=d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
     return `<div class="log-item"><div class="log-ic"><i></i></div>
       <div class="log-main"><div class="t">${focusLabel(s.focus)}</div>
-      <div class="s">${day} · ${labelInt(s.intensity)} · ${s.ex} exos</div></div>
+      <div class="s">${day} · ${labelInt(s.intensity)}${s.morning?' · Réveil ☀️':''} · ${s.ex} exos</div></div>
       <div class="log-min">${s.minutes}′</div></div>`;
   }).join('');
 }
