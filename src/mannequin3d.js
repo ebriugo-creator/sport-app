@@ -187,7 +187,7 @@ class Stage {
     const canvas = document.createElement('canvas');
     canvas.className = 'ex3d';
     const r = (this.renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: !!window.__EX3D_TEST__ }));
-    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
     r.outputColorSpace = SRGBColorSpace;
     r.shadowMap.enabled = true;
     r.shadowMap.type = PCFSoftShadowMap;
